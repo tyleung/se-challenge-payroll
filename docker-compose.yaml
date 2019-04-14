@@ -1,0 +1,90 @@
+version: '3'
+
+services:
+  roach1:
+    image: cockroachdb/cockroach:v2.1.6
+    command: start --insecure
+    expose:
+      - '8080'
+      - '26257'
+    ports:
+      - '26257:26257'
+      - '8080:8080'
+    networks:
+      - roachnet
+    volumes:
+      - roach1:/cockroach/cockroach-data
+  roach2:
+    image: cockroachdb/cockroach:v2.1.6
+    command: start --insecure --join=roach1
+    depends_on:
+      - roach1
+    networks:
+      - roachnet
+    volumes:
+      - roach2:/cockroach/cockroach-data
+  roach3:
+    image: cockroachdb/cockroach:v2.1.6
+    command: start --insecure --join=roach1
+    depends_on:
+      - roach1
+    networks:
+      - roachnet
+    volumes:
+      - roach3:/cockroach/cockroach-data
+  payrollr-db:
+    container_name: payrollr-db
+    image: payrollr-db
+    build:
+      context: ./payrollr-db
+      dockerfile: Dockerfile
+    depends_on:
+      - roach1
+      - roach2
+      - roach3
+    networks:
+      - roachnet
+    volumes:
+      - ./payrollr-db/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3002:3002
+  payrollr-serverless:
+    container_name: payrollr-serverless
+    image: payrollr-serverless
+    build:
+      context: ./payrollr-serverless
+      dockerfile: Dockerfile
+    networks:
+      - roachnet
+    volumes:
+      - ./payrollr-serverless/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3001:3001
+    environment:
+      - DB_URL=http://payrollr-db:3002
+  payrollr-client:
+    container_name: payrollr-client
+    image: payrollr-client
+    build:
+      context: ./payrollr-client
+      dockerfile: Dockerfile
+    networks:
+      - roachnet
+    volumes:
+      - ./payrollr-client/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001
+      - CHOKIDAR_USEPOLLING=true
+
+networks:
+  roachnet:
+
+volumes:
+  roach1:
+  roach2:
+  roach3:
