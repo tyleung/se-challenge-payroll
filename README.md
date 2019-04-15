@@ -198,8 +198,21 @@ off one of your strengths.
 Please modify `README.md` to add:
 
 1. Instructions on how to build/run your application
+
+   This application requires [Docker](https://hub.docker.com/search/?type=edition&offering=community).  
+   From the project root, run
+
+   `docker-compose up --build`
+
+   to start the application.  
+    Once loaded, the application will be hosted at [`http://localhost:3000`](http://localhost:3000)
+
 1. A paragraph or two about what you are particularly proud of in your
    implementation, and why.
+
+   I'm proud of how I was able to incorporate new technologies in my implementation. One of these technologies is Docker. Prior to this project, I had no experience using it, but it was something that I had been wanting to learn and thus I took this opportunity to learn it in a practical setting. The reason I chose Docker is because I wanted my application to be easy to setup for those who might be testing it. Since the requirements state that it should run on either Linux or Mac OS X, I thought that Docker would a good choice.
+
+   Another new technology I utilized is CockroachDB, which is a NewSQL database that provides scalability while maintaining ACID properties. The nice thing about CockroachDB is that it can be rnu locally, as opposed to a similar solution such as Google's Cloud Spanner.
 
 ## Submission Instructions
 
