@@ -40,10 +40,18 @@ const createPayrollReport = (timeReports, wages, reportId) => {
         pay_period_start: payPeriod.startDate,
         pay_period_end: payPeriod.endDate,
         amount_paid: amountPaid,
+        hours_worked: report.hours_worked,
         report_id: reportId
       };
     } else {
       payrollReport[key].amount_paid += amountPaid;
+      payrollReport[key].hours_worked += report.hours_worked;
+    }
+  });
+
+  payrollReport.forEach(report => {
+    if (report.hours_worked > 20) {
+      report.amount_paid *= 1.5;
     }
   });
 

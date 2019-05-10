@@ -7,7 +7,9 @@ const models = require('./models');
 // Constants
 const HOST = '0.0.0.0';
 const PORT = 3002;
-const WAGES = { A: 20, B: 30 };
+
+const wages_db = { [id: 1, 'job_group': 'A', 'val': 20, 'start_date': null] }
+const WAGES = { A: {default_val: 20, new_val: 30, new_date: '01/12/2019'}, B: 30 };
 
 app.locals.WAGES = WAGES;
 app.use(cors());
